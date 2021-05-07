@@ -8,5 +8,4 @@ val userList = mutableListOf<User>()
 val projectList = mutableListOf<Project>()
 val replyList = mutableListOf<Reply>()
 
-class Controller {
-}
+class Controller

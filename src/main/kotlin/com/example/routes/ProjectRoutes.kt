@@ -1,6 +1,7 @@
 package com.example.routes
 
 import com.example.controller.projectList
+import com.example.controller.userList
 import com.example.model.Project
 import io.ktor.application.*
 import io.ktor.response.*
@@ -16,11 +17,16 @@ fun Application.configureProject() {
                     name = parameters["name"] ?: "Nope",
                     description = parameters["description"] ?: "Nope",
                     githubProjectLink = parameters["githubProjectLink"] ?: "Nope",
-                    ownerId = 0,
-                    tags = listOf(),
-                    replyIdList = listOf()
+                    ownerId = (parameters["ownerId"] ?: "0").toInt(),
+                    tags = mutableListOf(),
+                    replyIdList = mutableListOf()
                 )
+
+
+                val owner = userList.filter { it.id == project.ownerId }[0]
+                owner.projectIdList.add(project.id)
                 projectList.add(project)
+
 
                 call.respond(project)
             }

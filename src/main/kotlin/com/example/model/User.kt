@@ -13,7 +13,7 @@ data class User(
     val lastName: String,
     val profileDescription: String,
     val githubProfileLink: String,
-    val projectIdList: List<Int>,
-    val replyIdList: List<Int>,
-    val tgId: String
+    val projectIdList: MutableList<Int>,
+    val replyIdList: MutableList<Int>,
+    val tgId: String,
 )

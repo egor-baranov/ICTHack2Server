@@ -7,5 +7,5 @@ data class Reply(
     val id: Int,
     val text: String,
     val projectId: Int,
-    val authorId: Int
+    val authorId: Int,
 )

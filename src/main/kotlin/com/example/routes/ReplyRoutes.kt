@@ -1,6 +1,8 @@
 package com.example.routes
 
+import com.example.controller.projectList
 import com.example.controller.replyList
+import com.example.controller.userList
 import com.example.model.Reply
 import io.ktor.application.*
 import io.ktor.response.*
@@ -16,8 +18,15 @@ fun Application.configureReply() {
                     id = replyList.lastIndex + 2,
                     text = parameters["text"] ?: "Nope",
                     projectId = (parameters["projectId"] ?: "0").toInt(),
-                    authorId = (parameters["githubProjectLink"] ?: "0").toInt(),
+                    authorId = (parameters["authorId"] ?: "0").toInt(),
                 )
+
+                val project = projectList.filter { it.id == reply.projectId }[0]
+                project.replyIdList.add(reply.id)
+
+                val author = userList.filter { it.id == reply.authorId }[0]
+                author.projectIdList.add(reply.id)
+
                 replyList.add(reply)
 
                 call.respond(reply)

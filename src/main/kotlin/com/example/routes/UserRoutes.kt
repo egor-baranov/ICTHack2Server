@@ -3,13 +3,9 @@ package com.example.routes
 import com.example.controller.userList
 import com.example.model.User
 import com.example.model.enumerations.UserSpecialization
-import io.ktor.serialization.*
-import io.ktor.features.*
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 fun Application.configureUser() {
     routing {
@@ -25,8 +21,8 @@ fun Application.configureUser() {
                     lastName = parameters["lastName"] ?: "Nope",
                     profileDescription = parameters["profileDescription"] ?: "Nope",
                     githubProfileLink = parameters["githubProfileLink"] ?: "Nope",
-                    projectIdList = listOf(),
-                    replyIdList = listOf(),
+                    projectIdList = mutableListOf(),
+                    replyIdList = mutableListOf(),
                     tgId = parameters["firstName"] ?: ""
                 )
                 userList.add(user)
