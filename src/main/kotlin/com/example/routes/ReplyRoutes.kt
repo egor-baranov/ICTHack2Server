@@ -25,7 +25,7 @@ fun Application.configureReply() {
                 project.replyIdList.add(reply.id)
 
                 val author = userList.filter { it.id == reply.authorId }[0]
-                author.projectIdList.add(reply.id)
+                author.replyIdList.add(reply.id)
 
                 replyList.add(reply)
 
