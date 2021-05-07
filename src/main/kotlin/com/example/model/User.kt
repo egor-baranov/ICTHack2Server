@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class User(
     val id: Int,
-    val userName: String,
     val password: String,
     val rating: Float,
     val specialization: UserSpecialization,

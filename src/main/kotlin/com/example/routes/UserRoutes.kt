@@ -17,8 +17,7 @@ fun Application.configureUser() {
             post("/register") {
                 val parameters = call.parameters
 
-                val user = User(id = (parameters["userName"] ?: "0").toInt(),
-                    userName = parameters["userName"] ?: "Nope",
+                val user = User(id = (parameters["id"] ?: "0").toInt(),
                     password = parameters["password"] ?: "Nope",
                     rating = 5.toFloat(),
                     specialization = UserSpecialization.IOS_DEVELOPER,
@@ -35,8 +34,9 @@ fun Application.configureUser() {
                 call.respond(user)
             }
 
-            post("/login"){
-
+            post("/login") {
+                val parameters = call.parameters
+                call.respond(userList.filter { it.id == parameters["id"]!!.toInt() && it.password == parameters["password"] }[0])
             }
 
 
