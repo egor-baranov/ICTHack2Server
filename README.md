@@ -7,6 +7,7 @@
 ## What is going to be implemented soon
 
 # Project architecture
+```
 │   main.py
 │   README.md
 │   requirements.txt
@@ -48,7 +49,7 @@
 │       
 └───tests
 test_dbworker.py
-
+```
 # List of possible requests (server API description)
 
 ## App requests
