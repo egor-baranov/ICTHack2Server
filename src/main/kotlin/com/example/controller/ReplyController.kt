@@ -15,7 +15,7 @@ class ReplyController {
         text: String,
         authorId: Int,
         projectId: Int,
-        vacancy: String
+        vacancy: String,
     ): Reply {
         return transaction {
             val replyObj = ReplyTable.insert {

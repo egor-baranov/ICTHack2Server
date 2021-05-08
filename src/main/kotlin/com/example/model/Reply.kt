@@ -10,5 +10,5 @@ data class Reply(
     val projectId: Int,
     val authorId: Int,
     val vacancy: String,
-    val status: ReplyStatus
+    val status: ReplyStatus,
 )

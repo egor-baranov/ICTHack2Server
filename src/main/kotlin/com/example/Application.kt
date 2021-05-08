@@ -21,7 +21,7 @@ fun initDataBase() {
     Database.connect(ds)
 }
 
-fun createTables(){
+fun createTables() {
     transaction {
         SchemaUtils.create(UserTable)
         SchemaUtils.create(ProjectTable)
