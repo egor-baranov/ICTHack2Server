@@ -35,12 +35,12 @@ fun Application.configureUser() {
 
 
             get("/list") {
-                call.respond(userList)
+                call.respond(userController.list())
             }
 
             get("/getById") {
                 val parameters = call.parameters
-                call.respond(userList.filter { it.id == parameters["id"]!!.toInt() }[0])
+                call.respond(userController.getById(parameters["id"]!!.toInt()))
             }
         }
     }
