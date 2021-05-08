@@ -31,6 +31,16 @@ fun Application.configureReply() {
                 val parameters = call.parameters
                 call.respond(replyController.getById(parameters["id"]!!.toInt()))
             }
+
+            get("/getByUId"){
+                val parameters = call.parameters
+                call.respond(replyController.getListByUserId(parameters["id"]!!.toInt()))
+            }
+
+            get("/getByProjectId"){
+                val parameters = call.parameters
+                call.respond(replyController.getListByProjectId(parameters["id"]!!.toInt()))
+            }
         }
     }
 }

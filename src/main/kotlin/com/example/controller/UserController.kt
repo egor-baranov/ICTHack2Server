@@ -9,6 +9,8 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserController {
+    private val replyController = ReplyController()
+
     fun userAdd(
         id: Int,
         password: String,
@@ -76,7 +78,7 @@ class UserController {
                     userObj[UserTable.profileDescription],
                     userObj[UserTable.githubProfileLink],
                     mutableListOf(),
-                    mutableListOf(),
+                    replyController.getListByUserId(userObj[UserTable.id]).map { it.id }.toMutableList(),
                     userObj[UserTable.tgId])
             }
         }
@@ -95,7 +97,7 @@ class UserController {
                 userObj[UserTable.profileDescription],
                 userObj[UserTable.githubProfileLink],
                 mutableListOf(),
-                mutableListOf(),
+                replyController.getListByUserId(userObj[UserTable.id]).map { it.id }.toMutableList(),
                 userObj[UserTable.tgId])
         }
     }

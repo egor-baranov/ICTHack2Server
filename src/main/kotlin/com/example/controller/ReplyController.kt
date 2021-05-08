@@ -54,4 +54,30 @@ class ReplyController {
             )
         }
     }
+
+    fun getListByUserId(id: Int): List<Reply> {
+        return transaction {
+            ReplyTable.select { ReplyTable.authorId eq id }.map { replyObj ->
+                Reply(
+                    replyObj[ReplyTable.id],
+                    replyObj[ReplyTable.text],
+                    replyObj[ReplyTable.authorId],
+                    replyObj[ReplyTable.projectId],
+                )
+            }
+        }
+    }
+
+    fun getListByProjectId(id: Int): List<Reply> {
+        return transaction {
+            ReplyTable.select { ReplyTable.projectId eq id }.map { replyObj ->
+                Reply(
+                    replyObj[ReplyTable.id],
+                    replyObj[ReplyTable.text],
+                    replyObj[ReplyTable.authorId],
+                    replyObj[ReplyTable.projectId],
+                )
+            }
+        }
+    }
 }

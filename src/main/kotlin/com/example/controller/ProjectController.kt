@@ -8,6 +8,9 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class ProjectController {
+    private val replyController = ReplyController()
+
+
     fun addProject(
         name: String,
         description: String,
@@ -41,7 +44,7 @@ class ProjectController {
                     projectObj[ProjectTable.id],
                     projectObj[ProjectTable.name],
                     projectObj[ProjectTable.description],
-                    mutableListOf(),
+                    replyController.getListByProjectId(projectObj[ProjectTable.id]).map { it.id }.toMutableList(),
                     projectObj[ProjectTable.githubProjectLink],
                     mutableListOf(),
                     projectObj[ProjectTable.ownerId]
@@ -58,7 +61,7 @@ class ProjectController {
                 projectObj[ProjectTable.id],
                 projectObj[ProjectTable.name],
                 projectObj[ProjectTable.description],
-                mutableListOf(),
+                replyController.getListByProjectId(projectObj[ProjectTable.id]).map { it.id }.toMutableList(),
                 projectObj[ProjectTable.githubProjectLink],
                 mutableListOf(),
                 projectObj[ProjectTable.ownerId]
