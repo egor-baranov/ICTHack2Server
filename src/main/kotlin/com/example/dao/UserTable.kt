@@ -5,7 +5,6 @@ import org.jetbrains.exposed.sql.Table
 object UserTable : Table() {
     val id = integer("id")
     val password = text("password")
-    val rating = float("rating")
     val firstName = text("firstName")
     val specialization = text("specialization")
     val lastName = text("lastName")

@@ -1,9 +1,11 @@
 package com.example.controller
 
+import com.example.dao.RatingTable
 import com.example.dao.UserTable
 import com.example.dao.UsersToProjectsTable
 import com.example.model.User
 import com.example.model.enumerations.UserSpecialization
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
@@ -29,7 +31,6 @@ class UserController {
                 it[UserTable.password] = password
                 it[UserTable.firstName] = firstName
                 it[UserTable.lastName] = lastName
-                it[UserTable.rating] = rating
                 it[UserTable.specialization] = specialization.toString()
                 it[UserTable.profileDescription] = profileDescription
                 it[UserTable.githubProfileLink] = githubProfileLink
@@ -38,7 +39,7 @@ class UserController {
         }
 
         return User(userObj[UserTable.id],
-            userObj[UserTable.rating],
+            0.toFloat(),
             UserSpecialization.valueOf(userObj[UserTable.specialization]),
             userObj[UserTable.firstName],
             userObj[UserTable.lastName],
@@ -54,9 +55,12 @@ class UserController {
         password: String,
     ): User {
         return transaction {
-            val userObj = UserTable.select { UserTable.id eq id; UserTable.password eq password }.toList()[0]
+            val userObj = UserTable.select { (UserTable.id eq id) and (UserTable.password eq password) }.toList()[0]
+            var rates =
+                RatingTable.select { RatingTable.userId eq userObj[UserTable.id] }.map { it[RatingTable.rate] }.toList()
+            if (rates.isEmpty()) rates = listOf(0)
             User(userObj[UserTable.id],
-                userObj[UserTable.rating],
+                rates.sum().toFloat() / rates.size,
                 UserSpecialization.IOS_DEVELOPER,
                 userObj[UserTable.firstName],
                 userObj[UserTable.lastName],
@@ -72,8 +76,12 @@ class UserController {
     fun list(): List<User> {
         return transaction {
             UserTable.selectAll().map { userObj ->
+                var rates =
+                    RatingTable.select { RatingTable.userId eq userObj[UserTable.id] }.map { it[RatingTable.rate] }
+                        .toList()
+                if (rates.isEmpty()) rates = listOf(0)
                 User(userObj[UserTable.id],
-                    userObj[UserTable.rating],
+                    rates.sum().toFloat() / rates.size,
                     UserSpecialization.valueOf(userObj[UserTable.specialization]),
                     userObj[UserTable.firstName],
                     userObj[UserTable.lastName],
@@ -92,8 +100,11 @@ class UserController {
     ): User {
         return transaction {
             val userObj = UserTable.select { UserTable.id eq id }.toList()[0]
+            var rates =
+                RatingTable.select { RatingTable.userId eq userObj[UserTable.id] }.map { it[RatingTable.rate] }.toList()
+            if (rates.isEmpty()) rates = listOf(0)
             User(userObj[UserTable.id],
-                userObj[UserTable.rating],
+                rates.sum().toFloat() / rates.size,
                 UserSpecialization.valueOf(userObj[UserTable.specialization]),
                 userObj[UserTable.firstName],
                 userObj[UserTable.lastName],
@@ -103,6 +114,16 @@ class UserController {
                     .map { it[UsersToProjectsTable.projectId] }.toMutableList(),
                 replyController.getListByUserId(userObj[UserTable.id]).map { it.id }.toMutableList(),
                 userObj[UserTable.tgLink])
+        }
+    }
+
+    fun rateUser(id: Int, rate: Int): User {
+        return transaction {
+            RatingTable.insert {
+                it[RatingTable.userId] = id
+                it[RatingTable.rate] = rate
+            }
+            getById(id)
         }
     }
 }

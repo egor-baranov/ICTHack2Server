@@ -99,8 +99,9 @@ class ReplyController {
 
     fun deny(id: Int) {
         transaction {
-            val replyObj = ReplyTable.select { ReplyTable.id eq id }.toList()[0]
-            replyObj[ReplyTable.status] = ReplyStatus.DENIED.toString()
+            ReplyTable.update({ ReplyTable.id eq id }) {
+                it[ReplyTable.status] = ReplyStatus.DENIED.toString()
+            }
         }
     }
 

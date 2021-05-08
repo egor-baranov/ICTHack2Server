@@ -29,6 +29,7 @@ fun createTables() {
         SchemaUtils.create(UsersToProjectsTable)
         SchemaUtils.create(ProjectTagsTable)
         SchemaUtils.create(VacancyTable)
+        SchemaUtils.create(RatingTable)
     }
 }
 

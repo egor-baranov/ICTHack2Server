@@ -43,6 +43,11 @@ fun Application.configureUser() {
                 val parameters = call.parameters
                 call.respond(userController.getById(parameters["id"]!!.toInt()))
             }
+
+            post("/rate"){
+                val parameters = call.parameters
+                call.respond(userController.rateUser(parameters["id"]!!.toInt(), parameters["rate"]!!.toInt()))
+            }
         }
     }
 }
