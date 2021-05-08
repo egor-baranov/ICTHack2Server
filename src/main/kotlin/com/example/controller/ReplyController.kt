@@ -1,11 +1,14 @@
 package com.example.controller
 
 import com.example.dao.ReplyTable
+import com.example.dao.UsersToProjectsTable
 import com.example.model.Reply
+import com.example.model.enumerations.ReplyStatus
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 
 class ReplyController {
     fun addReply(
@@ -18,6 +21,7 @@ class ReplyController {
                 it[ReplyTable.text] = text
                 it[ReplyTable.authorId] = authorId
                 it[ReplyTable.projectId] = projectId
+                it[ReplyTable.status] = ReplyStatus.WAIT.toString()
             }
 
             Reply(
@@ -25,6 +29,7 @@ class ReplyController {
                 replyObj[ReplyTable.text],
                 replyObj[ReplyTable.authorId],
                 replyObj[ReplyTable.projectId],
+                ReplyStatus.valueOf(replyObj[ReplyTable.status]),
             )
         }
     }
@@ -37,6 +42,7 @@ class ReplyController {
                     replyObj[ReplyTable.text],
                     replyObj[ReplyTable.authorId],
                     replyObj[ReplyTable.projectId],
+                    ReplyStatus.valueOf(replyObj[ReplyTable.status]),
                 )
             }
         }
@@ -51,6 +57,7 @@ class ReplyController {
                 replyObj[ReplyTable.text],
                 replyObj[ReplyTable.authorId],
                 replyObj[ReplyTable.projectId],
+                ReplyStatus.valueOf(replyObj[ReplyTable.status]),
             )
         }
     }
@@ -63,6 +70,7 @@ class ReplyController {
                     replyObj[ReplyTable.text],
                     replyObj[ReplyTable.authorId],
                     replyObj[ReplyTable.projectId],
+                    ReplyStatus.valueOf(replyObj[ReplyTable.status]),
                 )
             }
         }
@@ -76,7 +84,30 @@ class ReplyController {
                     replyObj[ReplyTable.text],
                     replyObj[ReplyTable.authorId],
                     replyObj[ReplyTable.projectId],
+                    ReplyStatus.valueOf(replyObj[ReplyTable.status]),
                 )
+            }
+        }
+    }
+
+    fun deny(id: Int) {
+        transaction {
+            val replyObj = ReplyTable.select { ReplyTable.id eq id }.toList()[0]
+            replyObj[ReplyTable.status] = ReplyStatus.DENIED.toString()
+        }
+    }
+
+    fun accept(id: Int) {
+        transaction {
+            ReplyTable.update ({ ReplyTable.id eq id }) {
+                it[ReplyTable.status] = ReplyStatus.ACCEPTED.toString()
+            }
+
+            val replyObj = ReplyTable.select { ReplyTable.id eq id }.toList()[0]
+
+            UsersToProjectsTable.insert {
+                it[UsersToProjectsTable.userId] = replyObj[ReplyTable.authorId]
+                it[UsersToProjectsTable.projectId] = replyObj[ReplyTable.projectId]
             }
         }
     }

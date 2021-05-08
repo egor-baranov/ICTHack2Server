@@ -32,7 +32,7 @@ fun Application.configureReply() {
                 call.respond(replyController.getById(parameters["id"]!!.toInt()))
             }
 
-            get("/getByUId"){
+            get("/getByUserId"){
                 val parameters = call.parameters
                 call.respond(replyController.getListByUserId(parameters["id"]!!.toInt()))
             }
@@ -40,6 +40,20 @@ fun Application.configureReply() {
             get("/getByProjectId"){
                 val parameters = call.parameters
                 call.respond(replyController.getListByProjectId(parameters["id"]!!.toInt()))
+            }
+
+            post("/deny"){
+                val parameters = call.parameters
+                val id = parameters["id"]!!.toInt()
+                replyController.deny(id)
+                call.respond(replyController.getById(id))
+            }
+
+            post("/accept"){
+                val parameters = call.parameters
+                val id = parameters["id"]!!.toInt()
+                replyController.accept(id)
+                call.respond(replyController.getById(id))
             }
         }
     }
