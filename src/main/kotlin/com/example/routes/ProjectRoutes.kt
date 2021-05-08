@@ -50,6 +50,11 @@ fun Application.configureProject() {
                         parameters["tags"]!!.split(",").map { ProjectTags.valueOf(it) }.toSet()))
                 }
             }
+
+            get("/getByUserId"){
+                val parameters = call.parameters
+                call.respond(projectController.getByUserId(parameters["id"]!!.toInt()))
+            }
         }
     }
 }

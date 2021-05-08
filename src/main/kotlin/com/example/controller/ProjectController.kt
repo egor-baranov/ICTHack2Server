@@ -171,4 +171,27 @@ class ProjectController {
             }
         }
     }
+
+    fun getByUserId(id: Int): List<Project> {
+        return transaction {
+            ProjectTable.select { ProjectTable.ownerId eq id }.map { projectObj ->
+                Project(
+                    projectObj[ProjectTable.id],
+                    projectObj[ProjectTable.name],
+                    projectObj[ProjectTable.description],
+                    replyController.getListByProjectId(projectObj[ProjectTable.id]).map { it.id }.toMutableList(),
+                    projectObj[ProjectTable.githubProjectLink],
+                    ProjectTagsTable.select { ProjectTagsTable.projectId eq projectObj[ProjectTable.id] }
+                        .map { ProjectTags.valueOf(it[ProjectTagsTable.tag]) }.toMutableList(),
+                    projectObj[ProjectTable.ownerId],
+                    UsersToProjectsTable.select {
+                        (UsersToProjectsTable.projectId eq projectObj[ProjectTable.id]) and
+                                (UsersToProjectsTable.userId neq projectObj[ProjectTable.ownerId])
+                    }.map { it[UsersToProjectsTable.userId] },
+                    getVacancyMap(projectObj[ProjectTable.id]),
+                    getFreeVacancy(projectObj[ProjectTable.id])
+                )
+            }
+        }
+    }
 }
