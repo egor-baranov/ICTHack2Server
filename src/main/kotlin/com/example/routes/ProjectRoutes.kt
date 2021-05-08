@@ -1,6 +1,7 @@
 package com.example.routes
 
 import com.example.controller.ProjectController
+import com.example.model.enumerations.ProjectTags
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -17,6 +18,7 @@ fun Application.configureProject() {
                     name = parameters["name"] ?: "Nope",
                     description = parameters["description"] ?: "Nope",
                     githubProjectLink = parameters["githubProjectLink"] ?: "Nope",
+                    tags = (parameters["tags"] ?: "").split(",").map { ProjectTags.valueOf(it) },
                     ownerId = (parameters["ownerId"] ?: "0").toInt()
                 )
 

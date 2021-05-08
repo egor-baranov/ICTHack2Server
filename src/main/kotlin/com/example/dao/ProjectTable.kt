@@ -1,6 +1,6 @@
 package com.example.dao
 
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.Table
 
 object ProjectTable : Table() {
     val id = integer("id").autoIncrement()

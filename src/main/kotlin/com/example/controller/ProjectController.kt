@@ -1,8 +1,10 @@
 package com.example.controller
 
 import com.example.dao.ProjectTable
+import com.example.dao.ProjectTagsTable
 import com.example.dao.UsersToProjectsTable
 import com.example.model.Project
+import com.example.model.enumerations.ProjectTags
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
@@ -16,6 +18,7 @@ class ProjectController {
         name: String,
         description: String,
         githubProjectLink: String,
+        tags: List<ProjectTags>,
         ownerId: Int,
     ): Project {
         return transaction {
@@ -24,6 +27,13 @@ class ProjectController {
                 it[ProjectTable.description] = description
                 it[ProjectTable.githubProjectLink] = githubProjectLink
                 it[ProjectTable.ownerId] = ownerId
+            }
+
+            tags.forEach { tag ->
+                ProjectTagsTable.insert {
+                    it[ProjectTagsTable.projectId] = projectObj[ProjectTable.id]
+                    it[ProjectTagsTable.tag] = tag.toString()
+                }
             }
 
             UsersToProjectsTable.insert {
@@ -37,7 +47,8 @@ class ProjectController {
                 projectObj[ProjectTable.description],
                 mutableListOf(),
                 projectObj[ProjectTable.githubProjectLink],
-                mutableListOf(),
+                ProjectTagsTable.select { ProjectTagsTable.projectId eq projectObj[ProjectTable.id] }
+                    .map { ProjectTags.valueOf(it[ProjectTagsTable.tag]) }.toMutableList(),
                 projectObj[ProjectTable.ownerId]
             )
         }
@@ -52,7 +63,8 @@ class ProjectController {
                     projectObj[ProjectTable.description],
                     replyController.getListByProjectId(projectObj[ProjectTable.id]).map { it.id }.toMutableList(),
                     projectObj[ProjectTable.githubProjectLink],
-                    mutableListOf(),
+                    ProjectTagsTable.select { ProjectTagsTable.projectId eq projectObj[ProjectTable.id] }
+                        .map { ProjectTags.valueOf(it[ProjectTagsTable.tag]) }.toMutableList(),
                     projectObj[ProjectTable.ownerId]
                 )
             }
@@ -69,7 +81,8 @@ class ProjectController {
                 projectObj[ProjectTable.description],
                 replyController.getListByProjectId(projectObj[ProjectTable.id]).map { it.id }.toMutableList(),
                 projectObj[ProjectTable.githubProjectLink],
-                mutableListOf(),
+                ProjectTagsTable.select { ProjectTagsTable.projectId eq projectObj[ProjectTable.id] }
+                    .map { ProjectTags.valueOf(it[ProjectTagsTable.tag]) }.toMutableList(),
                 projectObj[ProjectTable.ownerId]
             )
         }

@@ -1,9 +1,6 @@
 package com.example
 
-import com.example.dao.ProjectTable
-import com.example.dao.ReplyTable
-import com.example.dao.UserTable
-import com.example.dao.UsersToProjectsTable
+import com.example.dao.*
 import com.example.plugins.configureRouting
 import com.example.plugins.configureSecurity
 import com.example.plugins.configureSerialization
@@ -30,6 +27,7 @@ fun createTables(){
         SchemaUtils.create(ProjectTable)
         SchemaUtils.create(ReplyTable)
         SchemaUtils.create(UsersToProjectsTable)
+        SchemaUtils.create(ProjectTagsTable)
     }
 }
 

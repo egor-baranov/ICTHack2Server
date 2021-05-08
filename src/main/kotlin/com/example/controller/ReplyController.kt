@@ -99,7 +99,7 @@ class ReplyController {
 
     fun accept(id: Int) {
         transaction {
-            ReplyTable.update ({ ReplyTable.id eq id }) {
+            ReplyTable.update({ ReplyTable.id eq id }) {
                 it[ReplyTable.status] = ReplyStatus.ACCEPTED.toString()
             }
 

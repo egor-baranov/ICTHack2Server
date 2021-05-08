@@ -1,6 +1,6 @@
 package com.example.dao
 
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.Table
 
 object UsersToProjectsTable : Table() {
     val projectId = integer("projectId") references ProjectTable.id
