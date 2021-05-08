@@ -1,6 +1,7 @@
 package com.example.model
 
 import com.example.model.enumerations.ProjectTags
+import com.example.model.enumerations.UserSpecialization
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,4 +13,6 @@ data class Project(
     val githubProjectLink: String,
     val tags: MutableList<ProjectTags>,
     val ownerId: Int,
+    val vacancy: MutableMap<String, Int>,
+    val freeVacancy: MutableMap<String, Int>
 )

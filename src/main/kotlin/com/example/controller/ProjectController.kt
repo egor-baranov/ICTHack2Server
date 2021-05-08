@@ -3,6 +3,7 @@ package com.example.controller
 import com.example.dao.ProjectTable
 import com.example.dao.ProjectTagsTable
 import com.example.dao.UsersToProjectsTable
+import com.example.dao.VacancyTable
 import com.example.model.Project
 import com.example.model.enumerations.ProjectTags
 import org.jetbrains.exposed.sql.insert
@@ -13,6 +14,24 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class ProjectController {
     private val replyController = ReplyController()
 
+    fun getVacancyMap(id: Int): MutableMap<String, Int> {
+        val vacancyMap = mutableMapOf<String, Int>()
+        VacancyTable.select { VacancyTable.projectId eq id }.forEach { row ->
+            vacancyMap[row[VacancyTable.type]] = row[VacancyTable.count]
+        }
+        return vacancyMap
+    }
+
+    private fun getFreeVacancy(id: Int): MutableMap<String, Int> {
+        val vacancyMap = getVacancyMap(id)
+        for (resultRow in UsersToProjectsTable.select { UsersToProjectsTable.projectId eq id }) {
+            if (resultRow[UsersToProjectsTable.vacancy] in vacancyMap) {
+                vacancyMap[resultRow[UsersToProjectsTable.vacancy]] =
+                    vacancyMap[resultRow[UsersToProjectsTable.vacancy]]!! - 1
+            }
+        }
+        return vacancyMap
+    }
 
     fun addProject(
         name: String,
@@ -20,6 +39,7 @@ class ProjectController {
         githubProjectLink: String,
         tags: List<ProjectTags>,
         ownerId: Int,
+        vacancyMap: MutableMap<String, Int>,
     ): Project {
         return transaction {
             val projectObj = ProjectTable.insert {
@@ -36,6 +56,14 @@ class ProjectController {
                 }
             }
 
+            for (vacancy in vacancyMap) {
+                VacancyTable.insert {
+                    it[VacancyTable.projectId] = projectObj[ProjectTable.id]
+                    it[VacancyTable.type] = vacancy.key
+                    it[VacancyTable.count] = vacancy.value
+                }
+            }
+
             UsersToProjectsTable.insert {
                 it[UsersToProjectsTable.userId] = ownerId
                 it[UsersToProjectsTable.projectId] = projectObj[ProjectTable.id]
@@ -49,7 +77,9 @@ class ProjectController {
                 projectObj[ProjectTable.githubProjectLink],
                 ProjectTagsTable.select { ProjectTagsTable.projectId eq projectObj[ProjectTable.id] }
                     .map { ProjectTags.valueOf(it[ProjectTagsTable.tag]) }.toMutableList(),
-                projectObj[ProjectTable.ownerId]
+                projectObj[ProjectTable.ownerId],
+                vacancyMap,
+                vacancyMap
             )
         }
     }
@@ -65,7 +95,9 @@ class ProjectController {
                     projectObj[ProjectTable.githubProjectLink],
                     ProjectTagsTable.select { ProjectTagsTable.projectId eq projectObj[ProjectTable.id] }
                         .map { ProjectTags.valueOf(it[ProjectTagsTable.tag]) }.toMutableList(),
-                    projectObj[ProjectTable.ownerId]
+                    projectObj[ProjectTable.ownerId],
+                    getVacancyMap(projectObj[ProjectTable.id]),
+                    getFreeVacancy(projectObj[ProjectTable.id])
                 )
             }
         }
@@ -83,7 +115,9 @@ class ProjectController {
                 projectObj[ProjectTable.githubProjectLink],
                 ProjectTagsTable.select { ProjectTagsTable.projectId eq projectObj[ProjectTable.id] }
                     .map { ProjectTags.valueOf(it[ProjectTagsTable.tag]) }.toMutableList(),
-                projectObj[ProjectTable.ownerId]
+                projectObj[ProjectTable.ownerId],
+                getVacancyMap(projectObj[ProjectTable.id]),
+                getFreeVacancy(projectObj[ProjectTable.id])
             )
         }
     }

@@ -27,9 +27,10 @@ class ReplyController {
             Reply(
                 replyObj[ReplyTable.id],
                 replyObj[ReplyTable.text],
-                replyObj[ReplyTable.authorId],
                 replyObj[ReplyTable.projectId],
-                ReplyStatus.valueOf(replyObj[ReplyTable.status]),
+                replyObj[ReplyTable.authorId],
+                replyObj[ReplyTable.vacancy],
+                ReplyStatus.valueOf(replyObj[ReplyTable.status])
             )
         }
     }
@@ -40,8 +41,9 @@ class ReplyController {
                 Reply(
                     replyObj[ReplyTable.id],
                     replyObj[ReplyTable.text],
-                    replyObj[ReplyTable.authorId],
                     replyObj[ReplyTable.projectId],
+                    replyObj[ReplyTable.authorId],
+                    replyObj[ReplyTable.vacancy],
                     ReplyStatus.valueOf(replyObj[ReplyTable.status]),
                 )
             }
@@ -57,6 +59,7 @@ class ReplyController {
                 replyObj[ReplyTable.text],
                 replyObj[ReplyTable.authorId],
                 replyObj[ReplyTable.projectId],
+                replyObj[ReplyTable.vacancy],
                 ReplyStatus.valueOf(replyObj[ReplyTable.status]),
             )
         }
@@ -68,8 +71,9 @@ class ReplyController {
                 Reply(
                     replyObj[ReplyTable.id],
                     replyObj[ReplyTable.text],
-                    replyObj[ReplyTable.authorId],
                     replyObj[ReplyTable.projectId],
+                    replyObj[ReplyTable.authorId],
+                    replyObj[ReplyTable.vacancy],
                     ReplyStatus.valueOf(replyObj[ReplyTable.status]),
                 )
             }
@@ -82,8 +86,9 @@ class ReplyController {
                 Reply(
                     replyObj[ReplyTable.id],
                     replyObj[ReplyTable.text],
-                    replyObj[ReplyTable.authorId],
                     replyObj[ReplyTable.projectId],
+                    replyObj[ReplyTable.authorId],
+                    replyObj[ReplyTable.vacancy],
                     ReplyStatus.valueOf(replyObj[ReplyTable.status]),
                 )
             }
