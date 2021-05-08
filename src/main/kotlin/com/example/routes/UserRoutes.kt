@@ -1,7 +1,8 @@
 package com.example.routes
 
-import com.example.controller.userList
 import com.example.controller.UserController
+import com.example.controller.userList
+import com.example.model.enumerations.UserSpecialization
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -21,6 +22,8 @@ fun Application.configureUser() {
                     lastName = parameters["lastName"] ?: "Nope",
                     profileDescription = parameters["profileDescription"] ?: "Nope",
                     githubProfileLink = parameters["githubProfileLink"] ?: "Nope",
+                    specialization = UserSpecialization.valueOf(parameters["specialization"]
+                        ?: "WEB_BACKEND_DEVELOPER"),
                     tgId = parameters["firstName"] ?: ""
                 )
                 userList.add(user)

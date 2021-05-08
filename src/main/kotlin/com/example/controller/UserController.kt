@@ -17,6 +17,7 @@ class UserController {
         profileDescription: String,
         githubProfileLink: String,
         tgId: String,
+        specialization: UserSpecialization,
         rating: Float = 5.toFloat(),
     ): User {
         val userObj = transaction {
@@ -26,6 +27,7 @@ class UserController {
                 it[UserTable.firstName] = firstName
                 it[UserTable.lastName] = lastName
                 it[UserTable.rating] = rating
+                it[UserTable.specialization] = specialization.toString()
                 it[UserTable.profileDescription] = profileDescription
                 it[UserTable.githubProfileLink] = githubProfileLink
                 it[UserTable.tgId] = tgId
@@ -34,7 +36,7 @@ class UserController {
 
         return User(userObj[UserTable.id],
             userObj[UserTable.rating],
-            UserSpecialization.IOS_DEVELOPER,
+            UserSpecialization.valueOf(userObj[UserTable.specialization]),
             userObj[UserTable.firstName],
             userObj[UserTable.lastName],
             userObj[UserTable.profileDescription],

@@ -7,6 +7,7 @@ object UserTable : Table() {
     val password = text("password")
     val rating = float("rating")
     val firstName = text("firstName")
+    val specialization = text("specialization")
     val lastName = text("lastName")
     val profileDescription = text("profileDescription")
     val githubProfileLink = text("githubProfileLink")
