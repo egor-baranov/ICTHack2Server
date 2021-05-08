@@ -11,7 +11,7 @@ object UserTable : Table() {
     val lastName = text("lastName")
     val profileDescription = text("profileDescription")
     val githubProfileLink = text("githubProfileLink")
-    val tgId = text("tgId")
+    val tgLink = text("tgLink")
 
     override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
 }

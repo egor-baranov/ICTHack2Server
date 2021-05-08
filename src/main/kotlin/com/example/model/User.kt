@@ -14,5 +14,5 @@ data class User(
     var githubProfileLink: String,
     var projectIdList: MutableList<Int>,
     var replyIdList: MutableList<Int>,
-    var tgId: String,
+    var tgLink: String,
 )

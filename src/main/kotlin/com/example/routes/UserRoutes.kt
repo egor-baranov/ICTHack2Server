@@ -23,7 +23,7 @@ fun Application.configureUser() {
                     githubProfileLink = parameters["githubProfileLink"] ?: "Nope",
                     specialization = UserSpecialization.valueOf(parameters["specialization"]
                         ?: "WEB_BACKEND_DEVELOPER"),
-                    tgId = parameters["tgId"] ?: ""
+                    tgId = parameters["tgLink"] ?: ""
                 )
 
                 call.respond(user)

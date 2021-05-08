@@ -1,6 +1,7 @@
 package com.example.controller
 
 import com.example.dao.UserTable
+import com.example.dao.UsersToProjectsTable
 import com.example.model.User
 import com.example.model.enumerations.UserSpecialization
 import org.jetbrains.exposed.sql.insert
@@ -32,7 +33,7 @@ class UserController {
                 it[UserTable.specialization] = specialization.toString()
                 it[UserTable.profileDescription] = profileDescription
                 it[UserTable.githubProfileLink] = githubProfileLink
-                it[UserTable.tgId] = tgId
+                it[UserTable.tgLink] = tgId
             }
         }
 
@@ -45,7 +46,7 @@ class UserController {
             userObj[UserTable.githubProfileLink],
             mutableListOf(),
             mutableListOf(),
-            userObj[UserTable.tgId])
+            userObj[UserTable.tgLink])
     }
 
     fun login(
@@ -61,9 +62,10 @@ class UserController {
                 userObj[UserTable.lastName],
                 userObj[UserTable.profileDescription],
                 userObj[UserTable.githubProfileLink],
-                mutableListOf(),
-                mutableListOf(),
-                userObj[UserTable.tgId])
+                UsersToProjectsTable.select { UsersToProjectsTable.userId eq userObj[UserTable.id] }
+                    .map { it[UsersToProjectsTable.projectId] }.toMutableList(),
+                replyController.getListByUserId(userObj[UserTable.id]).map { it.id }.toMutableList(),
+                userObj[UserTable.tgLink])
         }
     }
 
@@ -77,9 +79,10 @@ class UserController {
                     userObj[UserTable.lastName],
                     userObj[UserTable.profileDescription],
                     userObj[UserTable.githubProfileLink],
-                    mutableListOf(),
+                    UsersToProjectsTable.select { UsersToProjectsTable.userId eq userObj[UserTable.id] }
+                        .map { it[UsersToProjectsTable.projectId] }.toMutableList(),
                     replyController.getListByUserId(userObj[UserTable.id]).map { it.id }.toMutableList(),
-                    userObj[UserTable.tgId])
+                    userObj[UserTable.tgLink])
             }
         }
     }
@@ -96,9 +99,10 @@ class UserController {
                 userObj[UserTable.lastName],
                 userObj[UserTable.profileDescription],
                 userObj[UserTable.githubProfileLink],
-                mutableListOf(),
+                UsersToProjectsTable.select { UsersToProjectsTable.userId eq userObj[UserTable.id] }
+                    .map { it[UsersToProjectsTable.projectId] }.toMutableList(),
                 replyController.getListByUserId(userObj[UserTable.id]).map { it.id }.toMutableList(),
-                userObj[UserTable.tgId])
+                userObj[UserTable.tgLink])
         }
     }
 }
