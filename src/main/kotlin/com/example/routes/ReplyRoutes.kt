@@ -17,6 +17,7 @@ fun Application.configureReply() {
                     text = parameters["text"] ?: "Nope",
                     projectId = (parameters["projectId"] ?: "0").toInt(),
                     authorId = (parameters["authorId"] ?: "0").toInt(),
+                    vacancy = parameters["vacancy"]!!
                 )
 
                 call.respond(reply)

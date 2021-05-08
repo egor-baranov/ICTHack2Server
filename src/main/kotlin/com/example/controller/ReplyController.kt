@@ -15,12 +15,14 @@ class ReplyController {
         text: String,
         authorId: Int,
         projectId: Int,
+        vacancy: String
     ): Reply {
         return transaction {
             val replyObj = ReplyTable.insert {
                 it[ReplyTable.text] = text
                 it[ReplyTable.authorId] = authorId
                 it[ReplyTable.projectId] = projectId
+                it[ReplyTable.vacancy] = vacancy
                 it[ReplyTable.status] = ReplyStatus.WAIT.toString()
             }
 
@@ -113,6 +115,7 @@ class ReplyController {
             UsersToProjectsTable.insert {
                 it[UsersToProjectsTable.userId] = replyObj[ReplyTable.authorId]
                 it[UsersToProjectsTable.projectId] = replyObj[ReplyTable.projectId]
+                it[UsersToProjectsTable.vacancy] = replyObj[ReplyTable.vacancy]
             }
         }
     }
