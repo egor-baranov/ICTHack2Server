@@ -70,7 +70,7 @@ class UserController {
             UserTable.selectAll().map { userObj ->
                 User(userObj[UserTable.id],
                     userObj[UserTable.rating],
-                    UserSpecialization.IOS_DEVELOPER,
+                    UserSpecialization.valueOf(userObj[UserTable.specialization]),
                     userObj[UserTable.firstName],
                     userObj[UserTable.lastName],
                     userObj[UserTable.profileDescription],
@@ -89,7 +89,7 @@ class UserController {
             val userObj = UserTable.select { UserTable.id eq id}.toList()[0]
             User(userObj[UserTable.id],
                 userObj[UserTable.rating],
-                UserSpecialization.IOS_DEVELOPER,
+                UserSpecialization.valueOf(userObj[UserTable.specialization]),
                 userObj[UserTable.firstName],
                 userObj[UserTable.lastName],
                 userObj[UserTable.profileDescription],
