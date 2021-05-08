@@ -12,6 +12,7 @@ data class Project(
     val githubProjectLink: String,
     val tags: MutableList<ProjectTags>,
     val ownerId: Int,
+    val contributorListId: List<Int>,
     val vacancy: MutableMap<String, Int>,
     val freeVacancy: MutableMap<String, Int>,
 )
