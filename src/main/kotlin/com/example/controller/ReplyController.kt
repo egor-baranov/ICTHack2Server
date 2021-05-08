@@ -1,8 +1,10 @@
 package com.example.controller
 
+import com.example.dao.ProjectTable
 import com.example.dao.ReplyTable
 import com.example.dao.UsersToProjectsTable
 import com.example.model.Reply
+import com.example.model.enumerations.NotificationType
 import com.example.model.enumerations.ReplyStatus
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -11,6 +13,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
 class ReplyController {
+    private val notificationController = NotificationController()
+
     fun addReply(
         text: String,
         authorId: Int,
@@ -25,6 +29,23 @@ class ReplyController {
                 it[ReplyTable.vacancy] = vacancy
                 it[ReplyTable.status] = ReplyStatus.WAIT.toString()
             }
+
+            notificationController.addNotification(replyObj[ReplyTable.authorId],
+                "WAIT",
+                "Ожидайте.",
+                NotificationType.WAIT_REPLY,
+                replyObj[ReplyTable.id]
+            )
+
+            notificationController.addNotification(ProjectTable.select { ProjectTable.id eq replyObj[ReplyTable.projectId] }
+                .toList()[0][ProjectTable.ownerId],
+                "WAIT",
+                "Новый запрос от $authorId на ${
+                    ProjectTable.select { ProjectTable.id eq projectId }.toList()[0][ProjectTable.name]
+                }.",
+                NotificationType.NEW_REPLY,
+                replyObj[ReplyTable.id]
+            )
 
             Reply(
                 replyObj[ReplyTable.id],
@@ -97,15 +118,26 @@ class ReplyController {
         }
     }
 
-    fun deny(id: Int) {
+    fun deny(id: Int, text: String = "Вы не приняты.") {
         transaction {
             ReplyTable.update({ ReplyTable.id eq id }) {
                 it[ReplyTable.status] = ReplyStatus.DENIED.toString()
             }
+
+            val replyObj = ReplyTable.select { ReplyTable.id eq id }.toList()[0]
+
+            notificationController.deleteByReplyId(id)
+            notificationController.addNotification(
+                replyObj[ReplyTable.authorId],
+                "DENIED",
+                text,
+                NotificationType.DENIED_REPLY,
+                replyObj[ReplyTable.id]
+            )
         }
     }
 
-    fun accept(id: Int) {
+    fun accept(id: Int, text: String = "Вы приняты.") {
         transaction {
             ReplyTable.update({ ReplyTable.id eq id }) {
                 it[ReplyTable.status] = ReplyStatus.ACCEPTED.toString()
@@ -118,6 +150,15 @@ class ReplyController {
                 it[UsersToProjectsTable.projectId] = replyObj[ReplyTable.projectId]
                 it[UsersToProjectsTable.vacancy] = replyObj[ReplyTable.vacancy]
             }
+
+            notificationController.deleteByReplyId(id)
+            notificationController.addNotification(
+                replyObj[ReplyTable.authorId],
+                "ACCEPTED",
+                text,
+                NotificationType.ACCEPTED_REPLY,
+                replyObj[ReplyTable.id]
+            )
         }
     }
 }

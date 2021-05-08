@@ -4,6 +4,7 @@ import com.example.dao.*
 import com.example.plugins.configureRouting
 import com.example.plugins.configureSecurity
 import com.example.plugins.configureSerialization
+import com.example.routes.configureNotifications
 import com.example.routes.configureProject
 import com.example.routes.configureReply
 import com.example.routes.configureUser
@@ -30,6 +31,7 @@ fun createTables() {
         SchemaUtils.create(ProjectTagsTable)
         SchemaUtils.create(VacancyTable)
         SchemaUtils.create(RatingTable)
+        SchemaUtils.create(NotificationTable)
     }
 }
 
@@ -37,11 +39,10 @@ fun main() {
     initDataBase()
     createTables()
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
-        configureRouting()
-        configureSecurity()
         configureSerialization()
         configureUser()
         configureProject()
         configureReply()
+        configureNotifications()
     }.start(wait = true)
 }

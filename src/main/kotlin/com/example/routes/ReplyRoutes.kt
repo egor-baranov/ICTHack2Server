@@ -46,14 +46,14 @@ fun Application.configureReply() {
             post("/deny") {
                 val parameters = call.parameters
                 val id = parameters["id"]!!.toInt()
-                replyController.deny(id)
+                replyController.deny(id, text = parameters["text"] ?: "Вы не приняты.")
                 call.respond(replyController.getById(id))
             }
 
             post("/accept") {
                 val parameters = call.parameters
                 val id = parameters["id"]!!.toInt()
-                replyController.accept(id)
+                replyController.accept(id, text = parameters["text"] ?: "Вы приняты.")
                 call.respond(replyController.getById(id))
             }
         }
