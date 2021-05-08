@@ -1,9 +1,6 @@
 package com.example.routes
 
 import com.example.controller.ProjectController
-import com.example.controller.projectList
-import com.example.controller.userList
-import com.example.model.Project
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*

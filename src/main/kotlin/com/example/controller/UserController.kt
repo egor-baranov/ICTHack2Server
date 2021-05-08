@@ -86,7 +86,7 @@ class UserController {
         id: Int,
     ): User {
         return transaction {
-            val userObj = UserTable.select { UserTable.id eq id}.toList()[0]
+            val userObj = UserTable.select { UserTable.id eq id }.toList()[0]
             User(userObj[UserTable.id],
                 userObj[UserTable.rating],
                 UserSpecialization.valueOf(userObj[UserTable.specialization]),

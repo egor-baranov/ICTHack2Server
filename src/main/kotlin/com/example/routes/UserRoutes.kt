@@ -1,7 +1,6 @@
 package com.example.routes
 
 import com.example.controller.UserController
-import com.example.controller.userList
 import com.example.model.enumerations.UserSpecialization
 import io.ktor.application.*
 import io.ktor.response.*
@@ -26,7 +25,6 @@ fun Application.configureUser() {
                         ?: "WEB_BACKEND_DEVELOPER"),
                     tgId = parameters["firstName"] ?: ""
                 )
-                userList.add(user)
 
                 call.respond(user)
             }
