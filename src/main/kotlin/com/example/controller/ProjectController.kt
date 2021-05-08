@@ -14,7 +14,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class ProjectController {
     private val replyController = ReplyController()
 
-    fun getVacancyMap(id: Int): MutableMap<String, Int> {
+    private fun getVacancyMap(id: Int): MutableMap<String, Int> {
         val vacancyMap = mutableMapOf<String, Int>()
         VacancyTable.select { VacancyTable.projectId eq id }.forEach { row ->
             vacancyMap[row[VacancyTable.type]] = row[VacancyTable.count]
@@ -119,6 +119,42 @@ class ProjectController {
                 getVacancyMap(projectObj[ProjectTable.id]),
                 getFreeVacancy(projectObj[ProjectTable.id])
             )
+        }
+    }
+
+    fun search(value: String, tags: Set<ProjectTags>): List<Project> {
+        return transaction {
+            value.split(" ")
+            ProjectTable.select { ProjectTable.name like "%$value%" }.toList().sortedWith { a, b ->
+                when {
+                    getFreeVacancy(a[ProjectTable.id]).values.sum() == getFreeVacancy(b[ProjectTable.id]).values.sum() -> {
+                        val aTags = ProjectTagsTable.select { ProjectTagsTable.projectId eq a[ProjectTable.id] }
+                            .map { ProjectTags.valueOf(it[ProjectTagsTable.tag]) }.toSet().intersect(tags).size
+                        val bTags = ProjectTagsTable.select { ProjectTagsTable.projectId eq b[ProjectTable.id] }
+                            .map { ProjectTags.valueOf(it[ProjectTagsTable.tag]) }.toSet().intersect(tags).size
+                        when {
+                            aTags == bTags -> 0
+                            aTags > bTags -> -1
+                            else -> 1
+                        }
+                    }
+                    getFreeVacancy(a[ProjectTable.id]).values.sum() > getFreeVacancy(b[ProjectTable.id]).values.sum() -> -1
+                    else -> 1
+                }
+            }.map { projectObj ->
+                Project(
+                    projectObj[ProjectTable.id],
+                    projectObj[ProjectTable.name],
+                    projectObj[ProjectTable.description],
+                    replyController.getListByProjectId(projectObj[ProjectTable.id]).map { it.id }.toMutableList(),
+                    projectObj[ProjectTable.githubProjectLink],
+                    ProjectTagsTable.select { ProjectTagsTable.projectId eq projectObj[ProjectTable.id] }
+                        .map { ProjectTags.valueOf(it[ProjectTagsTable.tag]) }.toMutableList(),
+                    projectObj[ProjectTable.ownerId],
+                    getVacancyMap(projectObj[ProjectTable.id]),
+                    getFreeVacancy(projectObj[ProjectTable.id])
+                )
+            }
         }
     }
 }

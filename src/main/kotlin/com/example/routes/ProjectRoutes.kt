@@ -40,6 +40,17 @@ fun Application.configureProject() {
                 val parameters = call.parameters
                 call.respond(projectController.getById(parameters["id"]!!.toInt()))
             }
+
+            get("/search") {
+                val parameters = call.parameters
+                if (parameters["tags"].isNullOrBlank()) {
+                    call.respond(projectController.search(parameters["name"] ?: "Nope", setOf()))
+                }
+                else{
+                    call.respond(projectController.search(parameters["name"] ?: "Nope",
+                        parameters["tags"]!!.split(",").map { ProjectTags.valueOf(it) }.toSet()))
+                }
+            }
         }
     }
 }
