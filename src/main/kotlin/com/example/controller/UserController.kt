@@ -3,7 +3,9 @@ package com.example.controller
 import com.example.dao.UserTable
 import com.example.model.User
 import com.example.model.enumerations.UserSpecialization
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserController {
@@ -31,7 +33,6 @@ class UserController {
         }
 
         return User(userObj[UserTable.id],
-            userObj[UserTable.password],
             userObj[UserTable.rating],
             UserSpecialization.IOS_DEVELOPER,
             userObj[UserTable.firstName],
@@ -41,5 +42,24 @@ class UserController {
             mutableListOf(),
             mutableListOf(),
             userObj[UserTable.tgId])
+    }
+
+    fun login(
+        id: Int,
+        password: String
+    ): User{
+        return transaction {
+            val userObj = UserTable.select { UserTable.id eq id; UserTable.password eq password }.toList()[0]
+            User(userObj[UserTable.id],
+                userObj[UserTable.rating],
+                UserSpecialization.IOS_DEVELOPER,
+                userObj[UserTable.firstName],
+                userObj[UserTable.lastName],
+                userObj[UserTable.profileDescription],
+                userObj[UserTable.githubProfileLink],
+                mutableListOf(),
+                mutableListOf(),
+                userObj[UserTable.tgId])
+        }
     }
 }

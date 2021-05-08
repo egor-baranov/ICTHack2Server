@@ -30,7 +30,7 @@ fun Application.configureUser() {
 
             post("/login") {
                 val parameters = call.parameters
-                call.respond(userList.filter { it.id == parameters["id"]!!.toInt() && it.password == parameters["password"] }[0])
+                call.respond(userController.login(parameters["id"]!!.toInt(), parameters["password"]!!))
             }
 
 

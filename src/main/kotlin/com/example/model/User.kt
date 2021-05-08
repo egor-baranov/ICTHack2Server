@@ -5,15 +5,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class User(
-    val id: Int,
-    val password: String,
-    val rating: Float,
-    val specialization: UserSpecialization,
-    val firstName: String,
-    val lastName: String,
-    val profileDescription: String,
-    val githubProfileLink: String,
-    val projectIdList: MutableList<Int>,
-    val replyIdList: MutableList<Int>,
-    val tgId: String,
+    var id: Int,
+    var rating: Float,
+    var specialization: UserSpecialization,
+    var firstName: String,
+    var lastName: String,
+    var profileDescription: String,
+    var githubProfileLink: String,
+    var projectIdList: MutableList<Int>,
+    var replyIdList: MutableList<Int>,
+    var tgId: String,
 )
