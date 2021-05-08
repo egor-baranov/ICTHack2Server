@@ -1,6 +1,7 @@
 package com.example.controller
 
 import com.example.dao.ProjectTable
+import com.example.dao.UsersToProjectsTable
 import com.example.model.Project
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -23,6 +24,11 @@ class ProjectController {
                 it[ProjectTable.description] = description
                 it[ProjectTable.githubProjectLink] = githubProjectLink
                 it[ProjectTable.ownerId] = ownerId
+            }
+
+            UsersToProjectsTable.insert {
+                it[UsersToProjectsTable.userId] = ownerId
+                it[UsersToProjectsTable.projectId] = projectObj[ProjectTable.id]
             }
 
             Project(
