@@ -1,5 +1,6 @@
 package com.example.model
 
+import com.example.model.enumerations.ReplyStatus
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,4 +9,6 @@ data class Reply(
     val text: String,
     val projectId: Int,
     val authorId: Int,
+    val vacancy: String,
+    val status: ReplyStatus,
 )

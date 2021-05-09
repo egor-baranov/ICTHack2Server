@@ -1,45 +1,60 @@
 package com.example.routes
 
-import com.example.controller.projectList
-import com.example.controller.replyList
-import com.example.controller.userList
-import com.example.model.Reply
+import com.example.controller.ReplyController
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
 fun Application.configureReply() {
     routing {
+        val replyController = ReplyController()
+
         route("/reply") {
             post("/add") {
                 val parameters = call.parameters
 
-                val reply = Reply(
-                    id = replyList.lastIndex + 2,
+                val reply = replyController.addReply(
                     text = parameters["text"] ?: "Nope",
                     projectId = (parameters["projectId"] ?: "0").toInt(),
                     authorId = (parameters["authorId"] ?: "0").toInt(),
+                    vacancy = parameters["vacancy"]!!
                 )
-
-                val project = projectList.filter { it.id == reply.projectId }[0]
-                project.replyIdList.add(reply.id)
-
-                val author = userList.filter { it.id == reply.authorId }[0]
-                author.replyIdList.add(reply.id)
-
-                replyList.add(reply)
 
                 call.respond(reply)
             }
 
 
             get("/list") {
-                call.respond(replyList)
+                call.respond(replyController.list())
             }
 
             get("/getById") {
                 val parameters = call.parameters
-                call.respond(replyList.filter { it.id == parameters["id"]!!.toInt() }[0])
+                call.respond(replyController.getById(parameters["id"]!!.toInt()))
+            }
+
+            get("/getByUserId") {
+                val parameters = call.parameters
+                call.respond(replyController.getListByUserId(parameters["id"]!!.toInt()))
+            }
+
+            get("/getByProjectId") {
+                val parameters = call.parameters
+                call.respond(replyController.getListByProjectId(parameters["id"]!!.toInt()))
+            }
+
+            post("/deny") {
+                val parameters = call.parameters
+                val id = parameters["id"]!!.toInt()
+                replyController.deny(id, text = parameters["text"] ?: "Вы не приняты.")
+                call.respond(replyController.getById(id))
+            }
+
+            post("/accept") {
+                val parameters = call.parameters
+                val id = parameters["id"]!!.toInt()
+                replyController.accept(id, text = parameters["text"] ?: "Вы приняты.")
+                call.respond(replyController.getById(id))
             }
         }
     }
