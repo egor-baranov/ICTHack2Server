@@ -1,16 +1,12 @@
 # Server-side for ICTHack #2
 
-## What is it?
+## About
 
 Server-side kotlin application for ICTHack.
 
-## What has already been implemented
+## Project key features
 
 Interfaces to work with project, users, replies from users to project and notifications.
-
-## What is going to be implemented soon
-
-Improvements of notifications. 
 
 # Project architecture
 ```
