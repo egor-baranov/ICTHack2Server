@@ -21,8 +21,9 @@ fun Application.configureUser() {
                     lastName = parameters["lastName"] ?: "Nope",
                     profileDescription = parameters["profileDescription"] ?: "Nope",
                     githubProfileLink = parameters["githubProfileLink"] ?: "Nope",
-                    specialization = UserSpecialization.valueOf(parameters["specialization"]
-                        ?: "WEB_BACKEND_DEVELOPER"),
+                    specialization = if (parameters["specialization"].isNullOrEmpty()) UserSpecialization.WEB_BACKEND_DEVELOPER else UserSpecialization.valueOf(
+                        parameters["specialization"]
+                            ?: "WEB_BACKEND_DEVELOPER"),
                     tgId = parameters["tgLink"] ?: ""
                 )
 
@@ -44,7 +45,7 @@ fun Application.configureUser() {
                 call.respond(userController.getById(parameters["id"]!!.toInt()))
             }
 
-            post("/rate"){
+            post("/rate") {
                 val parameters = call.parameters
                 call.respond(userController.rateUser(parameters["id"]!!.toInt(), parameters["rate"]!!.toInt()))
             }

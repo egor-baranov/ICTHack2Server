@@ -15,15 +15,17 @@ fun Application.configureProject() {
                 val parameters = call.parameters
 
                 val vacancyMap = mutableMapOf<String, Int>()
-                (parameters["vacancy"] ?: "").split(",").forEach {
-                    vacancyMap[it.split(":")[0]] = it.split(":")[1].toInt()
+                if(!parameters["vacancy"].isNullOrBlank()) {
+                    parameters["vacancy"]!!.split(",").forEach {
+                        vacancyMap[it.split(":")[0]] = it.split(":")[1].toInt()
+                    }
                 }
 
                 val project = projectController.addProject(
                     name = parameters["name"] ?: "Nope",
                     description = parameters["description"] ?: "Nope",
                     githubProjectLink = parameters["githubProjectLink"] ?: "Nope",
-                    tags = (parameters["tags"] ?: "").split(",").map { ProjectTags.valueOf(it) },
+                    tags = if(parameters["tags"].isNullOrBlank()) listOf() else parameters["tags"]!!.split(",").map { ProjectTags.valueOf(it) },
                     ownerId = (parameters["ownerId"] ?: "0").toInt(),
                     vacancyMap = vacancyMap
                 )
