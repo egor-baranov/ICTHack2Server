@@ -2,53 +2,52 @@
 
 ## What is it?
 
+Server-side kotlin application for ICTHack.
+
 ## What has already been implemented
+
+Interfaces to work with project, users, replies from users to project and notifications.
 
 ## What is going to be implemented soon
 
+Improvements of notifications. 
+
 # Project architecture
 ```
-│   main.py
-│   README.md
-│   requirements.txt
-│
-├───components
-│   │   config.py
-│   │   core.py
-│   │
-│   ├───database
-│   │   │   DatabaseWorker.py
-│   │   │
-│   │   └───data
-│   │           blocked_users.json
-│   │           comments.json
-│   │           users.json
-│   │           videos.json
-│   │    
-│   └───managers
-│           CommentManager.py
-│           UserManager.py
-│           VideoManager.py
-│
-├───dto
-│       Comment.py
-│       User.py
-│       Video.py
-│    
-├───lib
-│       smsc_api.py
-│
-├───routes
-│   ├───admin_panel
-│   │       admin_requests.py
-│   │       user_editing.py
-│   │
-│   └───app_requests
-│           data_list.py
-│           regular_requests.py
-│       
-└───tests
-test_dbworker.py
+├── Application.kt
+├── controller
+│   ├── NotificationController.kt
+│   ├── ProjectController.kt
+│   ├── ReplyController.kt
+│   └── UserController.kt
+├── dao
+│   ├── NotificationTable.kt
+│   ├── ProjectTable.kt
+│   ├── ProjectTagsTable.kt
+│   ├── RatingTable.kt
+│   ├── ReplyTable.kt
+│   ├── UsersToProjectsTable.kt
+│   ├── UserTable.kt
+│   └── VacancyTable.kt
+├── model
+│   ├── enumerations
+│   │   ├── NotificationType.kt
+│   │   ├── ProjectTags.kt
+│   │   ├── ReplyStatus.kt
+│   │   └── UserSpecialization.kt
+│   ├── Notification.kt
+│   ├── Project.kt
+│   ├── Reply.kt
+│   └── User.kt
+├── plugins
+│   ├── Routing.kt
+│   ├── Security.kt
+│   └── Serialization.kt
+└── routes
+    ├── NotificationRoutes.kt
+    ├── ProjectRoutes.kt
+    ├── ReplyRoutes.kt
+    └── UserRoutes.kt
 ```
 # List of possible requests (server API description)
 
