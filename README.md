@@ -90,7 +90,7 @@ This request does not require any parameters.
 
 #### Get by id
 
-Returns all the data about users by id parameter.
+Returns all the data about user by id parameter.
 
 ### Projects
 
@@ -102,11 +102,88 @@ name               | Name of new project.
 description        | Description of new project.
 githubProjectLink  | Link to the new project.
 ownerId            | Id of owner of new project.
-tags               | List of tags of new user.
+vacancy            | List of vacancy of new project.
+tags               | List of tags of new project.
 
-Returns all the data about all users:
+#### List
+
+Returns all the data about all Projects:
 [
-// list of registered users data
+// list of Projects data
 ]
 
 This request does not require any parameters.
+
+#### Get by id
+
+Returns all the data about project by id parameter.
+
+#### Get By UId Copy
+
+Returns all the data about projects by id parameter.
+
+[
+// list of Projects data
+]
+
+#### Search
+
+Parameter          | Description
+-------------------|-------
+name               | Name to search.
+tags               | List of tags in project.
+
+### Reply
+
+#### Add
+
+Parameter          | Description
+-------------------|-------
+text               | User text in reply.
+projectId          | Id of project of new reply.
+authorId           | Author id of the new reply.
+vacancy            | List of vacancy of new reply.
+
+#### List
+
+Returns all the data about all replies.
+
+[
+// list of Projects data
+]
+
+#### Get By Id
+
+Returns all the data about replies by id parameter.
+
+[
+// list of Projects data
+]
+
+#### Get By UserId
+
+Returns all the data about projects by id parameter.
+
+[
+// list of Projects data
+]
+
+#### Get By ProjectId
+
+Returns all the data about projects by id parameter.
+
+[
+// list of Projects data
+]
+
+#### Accept
+
+Accept reply by id.
+
+#### Deny
+
+Deny reply by id.
+
+### Notifications Get By UserID
+
+Return list on notifications by UserId.
