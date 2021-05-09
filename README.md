@@ -110,3 +110,6 @@ Returns all the data about all users:
 ]
 
 This request does not require any parameters.
+
+## Link to the app repository
+https://github.com/egor-baranov/ICTHack2App
