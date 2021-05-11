@@ -14,6 +14,7 @@ class NotificationController {
         title: String,
         text: String,
         type: NotificationType,
+        projectId: Int,
         replyId: Int,
     ): Notification {
         return transaction {
@@ -22,6 +23,7 @@ class NotificationController {
                 it[NotificationTable.title] = title
                 it[NotificationTable.type] = type.toString()
                 it[NotificationTable.text] = text
+                it[NotificationTable.projectId] = projectId
                 it[NotificationTable.replyId] = replyId
             }
 
@@ -31,7 +33,8 @@ class NotificationController {
                 notificationObj[NotificationTable.title],
                 notificationObj[NotificationTable.text],
                 NotificationType.valueOf(notificationObj[NotificationTable.type]),
-                notificationObj[NotificationTable.replyId],
+                notificationObj[NotificationTable.projectId],
+                notificationObj[NotificationTable.replyId]
             )
         }
     }
@@ -45,6 +48,7 @@ class NotificationController {
                     notificationObj[NotificationTable.title],
                     notificationObj[NotificationTable.text],
                     NotificationType.valueOf(notificationObj[NotificationTable.type]),
+                    notificationObj[NotificationTable.projectId],
                     notificationObj[NotificationTable.replyId],
                 )
             }
@@ -60,6 +64,7 @@ class NotificationController {
                     notificationObj[NotificationTable.title],
                     notificationObj[NotificationTable.text],
                     NotificationType.valueOf(notificationObj[NotificationTable.type]),
+                    notificationObj[NotificationTable.projectId],
                     notificationObj[NotificationTable.replyId],
                 )
             }
@@ -72,7 +77,7 @@ class NotificationController {
         }
     }
 
-    fun deleteByReplyId(id: Int){
+    fun deleteByReplyId(id: Int) {
         transaction {
             NotificationTable.deleteWhere { NotificationTable.replyId eq id }
         }

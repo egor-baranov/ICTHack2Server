@@ -10,5 +10,6 @@ data class Notification(
     val title: String,
     val text: String,
     val type: NotificationType,
-    val replyId: Int
+    val projectId: Int,
+    val replyId: Int,
 )

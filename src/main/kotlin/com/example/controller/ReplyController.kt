@@ -34,6 +34,7 @@ class ReplyController {
                 "WAIT",
                 "Ожидайте.",
                 NotificationType.WAIT_REPLY,
+                projectId,
                 replyObj[ReplyTable.id]
             )
 
@@ -44,6 +45,7 @@ class ReplyController {
                     ProjectTable.select { ProjectTable.id eq projectId }.toList()[0][ProjectTable.name]
                 }.",
                 NotificationType.NEW_REPLY,
+                replyObj[ReplyTable.projectId],
                 replyObj[ReplyTable.id]
             )
 
@@ -132,6 +134,7 @@ class ReplyController {
                 "DENIED",
                 text,
                 NotificationType.DENIED_REPLY,
+                replyObj[ReplyTable.projectId],
                 replyObj[ReplyTable.id]
             )
         }
@@ -157,6 +160,7 @@ class ReplyController {
                 "ACCEPTED",
                 text,
                 NotificationType.ACCEPTED_REPLY,
+                replyObj[ReplyTable.projectId],
                 replyObj[ReplyTable.id]
             )
         }

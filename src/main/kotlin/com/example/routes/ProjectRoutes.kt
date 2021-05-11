@@ -15,7 +15,7 @@ fun Application.configureProject() {
                 val parameters = call.parameters
 
                 val vacancyMap = mutableMapOf<String, Int>()
-                if(!parameters["vacancy"].isNullOrBlank()) {
+                if (!parameters["vacancy"].isNullOrBlank()) {
                     parameters["vacancy"]!!.split(",").forEach {
                         vacancyMap[it.split(":")[0]] = it.split(":")[1].toInt()
                     }
@@ -25,7 +25,8 @@ fun Application.configureProject() {
                     name = parameters["name"] ?: "Nope",
                     description = parameters["description"] ?: "Nope",
                     githubProjectLink = parameters["githubProjectLink"] ?: "Nope",
-                    tags = if(parameters["tags"].isNullOrBlank()) listOf() else parameters["tags"]!!.split(",").map { ProjectTags.valueOf(it) },
+                    tags = if (parameters["tags"].isNullOrBlank()) listOf() else parameters["tags"]!!.split(",")
+                        .map { ProjectTags.valueOf(it) },
                     ownerId = (parameters["ownerId"] ?: "0").toInt(),
                     vacancyMap = vacancyMap
                 )
@@ -53,7 +54,7 @@ fun Application.configureProject() {
                 }
             }
 
-            get("/getByUserId"){
+            get("/getByUserId") {
                 val parameters = call.parameters
                 call.respond(projectController.getByUserId(parameters["id"]!!.toInt()))
             }
